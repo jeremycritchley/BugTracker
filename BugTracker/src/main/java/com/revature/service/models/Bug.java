@@ -17,7 +17,7 @@ import lombok.Data;
 public class Bug {
 	
 	@Id 
-	@Column(name="user_id")
+	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
