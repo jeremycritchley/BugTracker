@@ -48,4 +48,6 @@ public interface BugService {
 	 */
 	public List<Bug> getAllBugs();
 	
+	public Bug updateBug(Bug bug);
+	
 }

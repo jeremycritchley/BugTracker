@@ -116,8 +116,22 @@ public class BugServiceImpl implements BugService {
 		try {
 			return bugRepo.findAll();
 		} catch (Exception e) {
+			log.error(e);
 			return null;
 		}
+	}
+
+	@Override
+	public Bug updateBug(Bug bug) {
+		Bug ret = null;
+		try {
+			Bug b = bugRepo.findById(bug.getId()).get();
+			ret = bugRepo.save(bug);
+		} catch (Exception e) {
+			log.error(e);
+			ret = null;
+		}
+		return ret;
 	}
 
 }
