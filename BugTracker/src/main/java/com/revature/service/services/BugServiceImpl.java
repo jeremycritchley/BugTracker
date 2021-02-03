@@ -1,6 +1,7 @@
 package com.revature.service.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +17,17 @@ public class BugServiceImpl implements BugService {
 	private BugRepo bugRepo;
 	
 	@Override
-	public long addBug(Bug bug) {
-		long ret = 0;
+	public Bug addBug(Bug bug) {
+		Bug ret = null;
 		
 		// Check bug's fields to be okay
 		
 		try {	
-			Bug b = bugRepo.save(bug);
-			
-			if (b != null) {
-				ret = b.getId();
-			}
+			ret = bugRepo.save(bug);
 			
 		} catch (Exception e) {
 			log.error(e);
-			ret = 0;
+			ret = null;
 		}
 		
 		return ret;
@@ -42,7 +39,7 @@ public class BugServiceImpl implements BugService {
 		List<Bug> bugs = null;
 		
 		try {
-			//bugs = bugRepo.findByProjectId(projectId);
+			bugs = bugRepo.findAllByProjectId(projectId);
 			
 		} catch (Exception e) {
 			log.error(e);
@@ -57,26 +54,70 @@ public class BugServiceImpl implements BugService {
 	 */
 	@Override
 	public List<Bug> getAllBugsAssociatedWith(long userId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<Bug> bugs = null;
+		
+		try {
+			bugs = bugRepo.findAllByAssignedToIdOrCreatedById(userId, userId);
+		} catch (Exception e) {
+			log.error(e);
+			bugs = null;
+		}
+		
+		return bugs;
 	}
 
 	@Override
 	public List<Bug> getAllBugsAssignedTo(long userId) {
+		List<Bug> bugs = null;
 		
-		return null;
+		try {
+			bugs = bugRepo.findAllByAssignedToId(userId);
+		} catch (Exception e) {
+			log.error(e);
+			bugs = null;
+		}
+		
+		return bugs;
 	}
 
 	@Override
 	public List<Bug> getAllBugsCreatedBy(long userId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Bug> bugs = null;
+		
+		try {
+			bugs = bugRepo.findAllByCreatedById(userId);
+		} catch (Exception e) {
+			log.error(e);
+			bugs = null;
+		}
+		
+		return bugs;
 	}
 
 	@Override
 	public Bug getBugById(long bugId) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Bug> bug = null;
+		Bug b = null;
+		
+		try {
+			bug = bugRepo.findById(bugId);
+			b = bug.get();
+		} catch (Exception e) {
+			log.error(e);
+			b = null;
+		}
+		
+		return b;
+	}
+	
+	@Override
+	public List<Bug> getAllBugs() {
+		try {
+			return bugRepo.findAll();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

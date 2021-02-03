@@ -1,16 +1,22 @@
 package com.revature.service.models;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 
 import com.sun.istack.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.*;
 
-@Entity @Data
+@Entity @Data @AllArgsConstructor @NoArgsConstructor
 public class User {
 	
 	@Id 
@@ -31,4 +37,7 @@ public class User {
 	@Column(name="role_id")
 	private Role role;
 	
+	@ManyToMany
+	@JoinColumn(name="project_id")
+	private List<Project> projects;
 }

@@ -1,19 +1,16 @@
 package com.revature.service.models;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity @Data
+@Entity @Data @AllArgsConstructor @NoArgsConstructor
 public class Project {
 	
 	@Id 
@@ -24,9 +21,9 @@ public class Project {
 	@Column(name = "name")
 	private String name;
 	
-	@ManyToMany
-	@JoinColumn(name="user_id")
-	private List<User> users;
+//	@ManyToMany
+//	@JoinColumn(name="user_id")
+//	private List<User> users;
 	
 //	@OneToMany
 //	@JoinColumn(name="project_id")
