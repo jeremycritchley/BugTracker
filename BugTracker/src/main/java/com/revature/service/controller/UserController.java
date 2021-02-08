@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.service.models.Project;
+import com.revature.service.models.Role;
 import com.revature.service.models.User;
 import com.revature.service.services.UserService;
 
@@ -24,6 +25,7 @@ public class UserController {
 	
 	@PostMapping("/users")
 	public ResponseEntity<User> addUser(@RequestBody User u) {
+		System.out.println("Adding a User");
 		ResponseEntity<User> ret = null;
 		User newUser = userService.addUser(u);
 		if (newUser == null) {
@@ -72,19 +74,6 @@ public class UserController {
 		return ret;
 	}
 	
-	@GetMapping("/users/{userId}/projects")
-	public ResponseEntity<List<Project>> getUserProjects(@PathVariable long userId) {
-		ResponseEntity<List<Project>> ret = null;
-		List<Project> projects = userService.getProjectsPerUser(userId);
-		if (projects == null) {
-			ret = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		} else if (projects.size() == 0) {
-			ret = ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-		} else {
-			ret = ResponseEntity.status(HttpStatus.OK).body(projects);
-		}
-		return ret;
-	}
 	
 	@GetMapping("/projects/{projectId}/users")
 	public ResponseEntity<List<User>> getProjectUsers(@PathVariable long projectId) {

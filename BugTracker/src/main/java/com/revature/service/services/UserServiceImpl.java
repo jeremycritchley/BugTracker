@@ -53,13 +53,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User addUser(User user) {
+		System.out.println(user);
 		User ret = null;
 		try {
 			if (user.getEmail().equals(null)) { }
-			else if (user.getFirstName().equals(null)){ }
-			else if (user.getLastName().equals(null)){ }
-			else if (user.getFirstName().equals(null)){ }
-			else if (user.getRole().equals(null)){ }
+			else if (user.getFirstName() == null){ }
+			else if (user.getLastName() == null){ }
+			else if (user.getFirstName() == null){ }
+			else if (user.getRole() == null){ }
 			else {
 				ret = userRepo.save(user);
 				if (ret.getId() < 1) {

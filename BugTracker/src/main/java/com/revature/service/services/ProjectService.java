@@ -23,5 +23,7 @@ public interface ProjectService {
 	 * Returns null if DB exception
 	 */
 	public List<Project> getAllProjects();
+	
+	public List<Project> getAllPerUser(long userId);
 		
 }

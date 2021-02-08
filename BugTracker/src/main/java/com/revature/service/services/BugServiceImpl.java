@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.revature.service.models.Bug;
 import com.revature.service.repository.BugRepo;
 
+@Service
 public class BugServiceImpl implements BugService {
 
 	private static Logger log = Logger.getLogger(BugServiceImpl.class);
@@ -126,7 +128,9 @@ public class BugServiceImpl implements BugService {
 		Bug ret = null;
 		try {
 			Bug b = bugRepo.findById(bug.getId()).get();
-			ret = bugRepo.save(bug);
+			if (b != null) {
+				ret = bugRepo.save(bug);
+			}
 		} catch (Exception e) {
 			log.error(e);
 			ret = null;

@@ -61,4 +61,18 @@ public class ProjectController {
 		return ret;
 	}
 	
+	@GetMapping("/users/{userId}/projects")
+	public ResponseEntity<List<Project>> getUserProjects(@PathVariable long userId) {
+		ResponseEntity<List<Project>> ret = null;
+		List<Project> projects = service.getAllPerUser(userId);
+		if (projects == null) {
+			ret = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		} else if (projects.size() == 0) {
+			ret = ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+		} else {
+			ret = ResponseEntity.status(HttpStatus.OK).body(projects);
+		}
+		return ret;
+	}
+	
 }

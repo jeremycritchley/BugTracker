@@ -58,4 +58,20 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 	}
 
+
+	@Override
+	public List<Project> getAllPerUser(long userId) {
+		List<Project> ret = null;
+		if (userId > 0) {
+			try {
+				ret = projectRepo.findAllByUserId(userId);
+			} catch (Exception e) {
+				log.error(e);
+				ret = null;
+			}
+		}
+		
+		return ret;
+	}
+
 }
