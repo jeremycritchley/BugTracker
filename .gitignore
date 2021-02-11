@@ -3,3 +3,4 @@ application.properties
 dev.properties
 config.env
 node_modules/
+db.js
