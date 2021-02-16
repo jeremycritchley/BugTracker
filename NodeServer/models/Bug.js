@@ -57,27 +57,37 @@ const Bug = sequelize.define('bug', {
         id: {
         type: Number,
         required: true,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     title: {
         type: String,
         required: true
     },
-    project: {
-        field: 'project_id',
-        type: Project,
-        ref: 'Project'
-    },
-    createdBy: {
-        field: 'created_by',
-        type: User,
-        ref: 'User'
-    },
-    assignedTo: {
-        field: 'assigned_to',
-        type: User,
-        ref: 'User'
-    },
+    // project: {
+    //     field: 'project_id',
+    //     type: Project,
+    //     references: {
+    //         model: 'projects',
+    //         key: 'id'
+    //     }
+    // },
+    // createdBy: {
+    //     field: 'created_by',
+    //     type: User,
+    //     references: {
+    //         model: 'user',
+    //         key: 'user_id'
+    //     }
+    // },
+    // assignedTo: {
+    //     field: 'assigned_to',
+    //     type: User,
+    //     references: {
+    //         model: 'user',
+    //         key: 'user_id'
+    //     }
+    // },
     createdOn: {
         field: 'created_on',
         type: Date,
@@ -113,6 +123,21 @@ const Bug = sequelize.define('bug', {
     freezeTableName: true,
     schema: 'bug_tracker',
     timestamps: false,
+    underscored: true,
 });
+
+Bug.belongsTo(User, {
+    foreignKey: 'created_by',
+    as: 'createdBy'
+});
+Bug.belongsTo(User, {
+    foreignKey: 'assigned_to',
+    as: 'assignedTo'
+});
+Bug.belongsTo(Project, {
+    foreignKey: 'project_id'
+});
+// User.hasMany(Bug);
+// Project.hasMany(Bug);
 
 module.exports = Bug;

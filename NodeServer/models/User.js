@@ -38,7 +38,8 @@ const User = sequelize.define('user', {
         field: 'user_id',
         type: Number,
         required: true,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     email: {
         type: String,
@@ -73,6 +74,10 @@ const User = sequelize.define('user', {
     freezeTableName: true,
     schema: 'bug_tracker',
     timestamps: false,
+    underscored: true,
 });
+
+User.belongsToMany(Project, {through: 'user_projects'});
+Project.belongsToMany(User, {through: 'user_projects'});
 
 module.exports = User;

@@ -1,10 +1,15 @@
 const express = require('express');
+const { Sequelize } = require('sequelize');
+//const { Sequelize } = require('sequelize/types');
 const sequelize = require('../config/db');
+const Op = Sequelize.Op;
 const router = express.Router();
 const pool = require('../config/db');
 const Bug = require('../models/Bug');
+const Project = require('../models/Project');
+const User = require('../models/User');
 
-// TODO
+// POST a new Bug
 router.post('/bugs', async (req,res) => {
     try {
        let bug =  await Bug.create(req.body);
@@ -19,35 +24,64 @@ router.post('/bugs', async (req,res) => {
     }
 });
 
-// TODO
+// GET all bugs associated with a user ID
 router.get('/bugs/all/:id', async (req,res) => {
    // res.status(200).json({msg: `GET /bugs/all/${req.params.id}`});
    try {
-    let bug = await Bug.findOne({
+    let bugs = await Bug.findAll({
         where: {
-          createdBy: req.params.id
-        }
+          [Op.or]: [{'created_by': req.params.id}, {'assigned_to': req.params.id}]
+        },
+        include: [
+            {
+                model: Project
+            },
+            {
+                model: User,
+                as: 'createdBy'
+            },
+            {
+                model: User,
+                as: 'assignedTo'
+            } 
+        ],
+        attributes: { exclude: ['project_id', 'assigned_to', 'created_by'] }
       });
-    if (bug) {
-        res.json(bug);
+    if (bugs) {
+        res.json(bugs);
     } else {
-        res.status(401);
+        res.status(401).send();
     }
     } catch (error) {
-        res.status(500);
+        console.log(error);
+        res.status(500).send();
     }
 });
 
-// TODO
+// GET all bugs created by a User given User ID
 router.get('/bugs/created/:id', async (req,res) => {
     try {
-        let bug = await Bug.findOne({
+        let bugs = await Bug.findAll({
             where: {
-              createdBy: req.params.id
-            }
+              'created_by': req.params.id
+            },
+            include: [
+                {
+                    model: Project
+                },
+                {
+                    model: User,
+                    as: 'createdBy'
+                },
+                {
+                    model: User,
+                    as: 'assignedTo'
+                } 
+            ],
+            attributes: { exclude: ['project_id', 'assigned_to', 'created_by'] }
           });
-        if (bug) {
-            res.json(bug);
+        if (bugs) {
+            res.json(bugs);
         } else {
             res.status(404).send();
         }
@@ -56,28 +90,58 @@ router.get('/bugs/created/:id', async (req,res) => {
         }
 });
 
-// TODO
+// GET all bugs assigned to a User given User ID
 router.get('/bugs/assigned/:id', async (req,res) => {
     try {
-        let bug = await Bug.findOne({
+        let bugs = await Bug.findAll({
             where: {
-              assignedTo: req.params.id
-            }
+              'assigned_to': req.params.id
+            },
+            include: [
+                {
+                    model: Project
+                },
+                {
+                    model: User,
+                    as: 'createdBy'
+                },
+                {
+                    model: User,
+                    as: 'assignedTo'
+                } 
+            ],
+            attributes: { exclude: ['project_id', 'assigned_to', 'created_by'] }
           });
-        if (bug) {
-            res.json(bug);
+        if (bugs) {
+            res.json(bugs);
         } else {
             res.status(404).send();
         }
         } catch (error) {
+            console.log(error);
             res.status(500).send();
         }
 });
 
-// TODO
+// GET Bug with given ID
 router.get('/bugs/:id', (req,res) => {
     try {
-        Bug.findByPk(req.params.id).then((bug) => {
+        Bug.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Project
+                },
+                {
+                    model: User,
+                    as: 'createdBy'
+                },
+                {
+                    model: User,
+                    as: 'assignedTo'
+                } 
+            ],
+            attributes: { exclude: ['project_id', 'assigned_to', 'created_by'] }
+        }).then((bug) => {
             if (bug) {
                 res.json(bug);
             } else {
@@ -90,7 +154,7 @@ router.get('/bugs/:id', (req,res) => {
     }
 });
 
-// TODO
+// GET all bugs
 router.get('/bugs', async (req,res) => {
     console.log('IN GET /bugs');
     // try {
@@ -101,7 +165,22 @@ router.get('/bugs', async (req,res) => {
     //     res.status(500);
     // }
     try {
-        const bugs = await Bug.findAll();
+        const bugs = await Bug.findAll({
+            include: [
+                {
+                    model: Project
+                },
+                {
+                    model: User,
+                    as: 'createdBy'
+                },
+                {
+                    model: User,
+                    as: 'assignedTo'
+                } 
+            ],
+            attributes: { exclude: ['project_id', 'assigned_to', 'created_by'] }
+        });
         res.json(bugs);
     } catch (error) {
         console.log(error);
@@ -109,14 +188,42 @@ router.get('/bugs', async (req,res) => {
     }
 });
 
-// TODO
+// PUT Bug
 router.put('/bugs', (req,res) => {
 
 });
 
-// TODO
-router.get('/projects/:id/bugs', (req,res) => {
-    res.status(200).json({msg: 'GET /projects/:id/bugs'});
+// GET all bugs per Project given Project ID
+router.get('/projects/:id/bugs', async (req,res) => {
+    try {
+        let bugs = await Bug.findAll({
+            where: {
+              'project_id': req.params.id
+            },
+            include: [
+                {
+                    model: Project
+                },
+                {
+                    model: User,
+                    as: 'createdBy'
+                },
+                {
+                    model: User,
+                    as: 'assignedTo'
+                } 
+            ],
+            attributes: { exclude: ['project_id', 'assigned_to', 'created_by'] }
+          });
+        if (bugs) {
+            res.json(bugs);
+        } else {
+            res.status(404).send();
+        }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send();
+        }
 });
 
 module.exports = router;

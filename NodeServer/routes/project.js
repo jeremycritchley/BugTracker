@@ -4,9 +4,18 @@ const pool = require('../config/db');
 
 const Project = require('../models/Project');
 
-// TODO
-router.get('/projects/:id', (req,res) => {
-
+// GET Project by given ID
+router.get('/projects/:id', async (req,res) => {
+    try {
+        const project = await Project.findByPk(req.params.id);
+        if (project) {
+            res.json(project);
+        } else {
+            res.status(404).send();
+        }
+    } catch (error) {
+        res.status(500).send();
+    }
 });
 
 // TODO
@@ -14,7 +23,7 @@ router.post('/projects', (req,res) => {
 
 });
 
-// TODO
+// GET all projects
 router.get('/projects', async (req,res) => {
     console.log('IN GET /projects');
     // try {
@@ -28,15 +37,15 @@ router.get('/projects', async (req,res) => {
         const projects = await Project.findAll();
         res.json(projects);
     } catch (error) {
-        res.status(500);
+        res.status(500).send();
     }
 
 });
 
 // TODO
-router.get('/projects/:id/users', (req,res) => {
+// router.get('/projects/:id/users', (req,res) => {
 
-});
+// });
 
 // TODO
 router.get('/users/:id/projects', (req,res) => {

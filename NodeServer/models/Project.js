@@ -18,7 +18,8 @@ const Project = sequelize.define('project', {
     id: {
         type: Number,
         required: true,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     }, 
     name: {
         type: String,
@@ -32,6 +33,7 @@ const Project = sequelize.define('project', {
     freezeTableName: true,
     schema: 'bug_tracker',
     timestamps: false,
+    underscored: true,
 });
 
 module.exports = Project;
